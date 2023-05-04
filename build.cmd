@@ -1,0 +1,1 @@
+dotnet.exe run --verbosity quiet --project ./src/build/Build.fsproj -- %*

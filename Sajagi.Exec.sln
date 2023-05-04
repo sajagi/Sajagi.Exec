@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Sajagi.Exec", "src/Sajagi.Exec/Sajagi.Exec.fsproj", "{E6501609-7848-4AAF-96BA-D04CA0B57EC9}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Examples", "src\Examples\Examples.fsproj", "{3AE0BA92-D669-4A1A-8913-CDC31F353B53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{940B3F4B-E1DB-4662-9518-52198BEA13BF}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		build = build
+		build.cmd = build.cmd
+		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Sajagi.Exec.Tests", "src\Sajagi.Exec.Tests\Sajagi.Exec.Tests.fsproj", "{261265B2-DD47-4A81-8E54-E01B29091870}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Build", "src\Build\Build.fsproj", "{C0025D92-0091-4677-8135-863ADB586A32}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6501609-7848-4AAF-96BA-D04CA0B57EC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6501609-7848-4AAF-96BA-D04CA0B57EC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6501609-7848-4AAF-96BA-D04CA0B57EC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6501609-7848-4AAF-96BA-D04CA0B57EC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AE0BA92-D669-4A1A-8913-CDC31F353B53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AE0BA92-D669-4A1A-8913-CDC31F353B53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AE0BA92-D669-4A1A-8913-CDC31F353B53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AE0BA92-D669-4A1A-8913-CDC31F353B53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{261265B2-DD47-4A81-8E54-E01B29091870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{261265B2-DD47-4A81-8E54-E01B29091870}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{261265B2-DD47-4A81-8E54-E01B29091870}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{261265B2-DD47-4A81-8E54-E01B29091870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0025D92-0091-4677-8135-863ADB586A32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0025D92-0091-4677-8135-863ADB586A32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0025D92-0091-4677-8135-863ADB586A32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0025D92-0091-4677-8135-863ADB586A32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
