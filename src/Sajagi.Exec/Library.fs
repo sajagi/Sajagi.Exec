@@ -3,21 +3,49 @@
 open System
 open System.Diagnostics
 open System.IO
+open System.Text
 
 type Output =
     | Ignore
     | Capture
 
-type StartOptions = { Output: Output; ErrorOutput: Output }
+[<Flags>]
+type StartOptionFlags =
+    | None = 0
+    | NoPrint = 1
 
-let defaultStartOpts = { Output = Ignore; ErrorOutput = Ignore }
+type StartOptions = { Output: Output; ErrorOutput: Output; Flags: StartOptionFlags }
+
+let mutable defaultStartOpts = { Output = Ignore; ErrorOutput = Ignore; Flags = StartOptionFlags.None }
 
 type WaitOptions = { ExpectedExitCode: int option }
 
 let defaultWaitOpts = { ExpectedExitCode = Some 0 }
 
+module private ConsoleEx =
+    let locker = obj()
+
+    let inColor color f : unit =
+        lock obj <| fun () ->
+            let fg = Console.ForegroundColor
+            try
+                Console.ForegroundColor <- color
+                f()
+            finally
+                Console.ForegroundColor <- fg
+
+    let writeC color (s:string) =
+        inColor color <| fun () -> Console.Write(s)
+
+    let writeChunks chunks =
+        lock obj <| fun () ->
+            chunks |> List.iter (fun (color, s) -> writeC color s)
+            Console.WriteLine()
+
+
 [<RequireQualifiedAccess>]
 module ExecRaw =
+
     type ExeArgs =
         | Raw of string
         | Args of string list
@@ -50,12 +78,22 @@ module ExecRaw =
 
         match args with
         | Raw args -> psi.Arguments <- args
-        | Args args -> args |> List.iter (fun a -> psi.ArgumentList.Add(a))
+        | Args args ->
+            let argsSb = StringBuilder()
+            args |> List.iter (PasteArguments.appendArgument argsSb)
+            psi.Arguments <- argsSb.ToString()
 
         psi.RedirectStandardOutput <- opts.Output = Capture
         psi.RedirectStandardError <- opts.ErrorOutput = Capture
 
         let ps = Process.Start(psi)
+
+        if opts.Flags.HasFlag(StartOptionFlags.NoPrint) = false then
+            ConsoleEx.writeChunks [
+                ConsoleColor.White, $"({ps.Id}) "
+                ConsoleColor.Green, $"\"{psi.FileName}\" "
+                ConsoleColor.White, psi.Arguments
+            ]
 
         let mkProcessor (outputf: unit -> StreamReader) =
             function
@@ -233,7 +271,7 @@ let tryWhereAsync (exe: string) : Async<string option> =
     async {
         let whereExe = Executable(defaultWherePath)
 
-        let startOpts = { defaultStartOpts with Output = Capture; ErrorOutput = Capture }
+        let startOpts = { defaultStartOpts with Output = Capture; ErrorOutput = Capture; Flags = StartOptionFlags.NoPrint }
         let waitOpts = { defaultWaitOpts with ExpectedExitCode = None }
 
         let! ps = whereExe.runAsync ([ exe ], startOpts = startOpts, waitOpts = waitOpts)

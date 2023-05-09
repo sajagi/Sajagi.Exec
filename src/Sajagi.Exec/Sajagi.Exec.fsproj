@@ -12,6 +12,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="PasteArguments.fs" />
         <Compile Include="Library.fs" />
         <Content Include="paket.template" />
     </ItemGroup>
