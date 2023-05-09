@@ -1,20 +1,43 @@
 ﻿namespace Tests
 
-open System.Threading
 open FsUnit
 open System
 open System.IO
 open NUnit.Framework
 open Sajagi.Exec
 
-module ExecTests =
+type DisposableFile (?extension, ?content) =
+    let filename =
+        let n = Path.GetRandomFileName()
+        match extension with None -> n | Some e -> $"{n}.{e}"
 
+    let fullPath = Path.Combine(Path.GetTempPath(), filename)
+    do
+        match content with
+        | None -> File.WriteAllBytes(fullPath, Array.empty)
+        | Some c -> File.WriteAllText(fullPath, c)
+
+    member _.FullPath with get() = fullPath
+
+    interface IDisposable with
+        member this.Dispose() =
+            if File.Exists(fullPath) then File.Delete(fullPath)
+
+module ExecTests =
   let equalIgnoringCase (expected:string) = Is.EqualTo(expected).IgnoreCase
 
   let whereFuncName = $"{nameof(where)}"
 
   let notExistingExecutableName = "idontexist"
   let invalidWhereArgument = @"C:\foo.exe"
+
+  module ExecTests =
+      [<Test>]
+      let ``Can exec .cmd file on Windows`` () =
+          if Environment.OSVersion.Platform <> PlatformID.Win32NT then Assert.Ignore("This test can be only run on Windows")
+          use cmdFile = new DisposableFile(extension="cmd", content="@echo off\r\necho hello world")
+          execWithOutput cmdFile.FullPath ""
+          |> should equal "hello world\r\n"
 
   module WhereTests =
       [<Test>]

@@ -216,6 +216,18 @@ let execWithOutput exe args =
 let execArgsWithOutput exe args =
     execArgsAsyncWithOutput exe args |> Async.RunSynchronously
 
+let private isExecutableApplicableForPlatform (platform:PlatformID) (path: string) =
+    match platform with
+    | PlatformID.Win32NT ->
+        // there are actually MANY extensions that are executable on windows
+        // see e.g. https://superuser.com/questions/228680/on-windows-what-filename-extensions-denote-an-executable
+
+        // heuristic: if it has an extension, it can be an executable
+        Path.HasExtension(path)
+    | _ ->
+        // todo: support other platforms
+        failwith $"Platform {platform} is not supported"
+
 /// Tries to find the path to an executable using the where command.
 let tryWhereAsync (exe: string) : Async<string option> =
     async {
@@ -230,6 +242,7 @@ let tryWhereAsync (exe: string) : Async<string option> =
             match ps.ExitCode with
             | 0 ->
                 ps.Output.StringOutput.Split(Environment.NewLine, StringSplitOptions.TrimEntries ||| StringSplitOptions.RemoveEmptyEntries)
+                |> Array.filter (isExecutableApplicableForPlatform Environment.OSVersion.Platform)
                 |> Array.head
                 |> Some
 
