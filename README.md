@@ -1,5 +1,7 @@
 # Sajagi.Exec
 
+[![NuGet Version and Downloads count](https://buildstats.info/nuget/Sajagi.Exec?includePreReleases=true)](https://www.nuget.org/packages/Sajagi.Exec)
+
 ## Usage
 
 ```fsharp
