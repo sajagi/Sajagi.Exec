@@ -126,7 +126,7 @@ module ExecRaw =
                     | NoProcessor -> return OutputResult.Ignored
                     | Capturing stringifier ->
                         let! result = stringifier
-                        return Captured result
+                        return Captured (result.Trim())
                 }
 
             let! output = getOutput ps.OutputProcessor

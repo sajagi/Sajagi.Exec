@@ -37,7 +37,7 @@ module ExecTests =
           if Environment.OSVersion.Platform <> PlatformID.Win32NT then Assert.Ignore("This test can be only run on Windows")
           use cmdFile = new DisposableFile(extension="cmd", content="@echo off\r\necho hello world")
           execWithOutput cmdFile.FullPath ""
-          |> should equal "hello world\r\n"
+          |> should equal "hello world"
 
   module WhereTests =
       [<Test>]
