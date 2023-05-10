@@ -3,4 +3,5 @@ bin/
 obj/
 out/
 riderModule.iml
+*.DotSettings.user
 /_ReSharper.Caches/
