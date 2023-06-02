@@ -31,13 +31,26 @@ module ExecTests =
   let notExistingExecutableName = "idontexist"
   let invalidWhereArgument = @"C:\foo.exe"
 
+  let ignoreOnNonWindows() =
+      if Environment.OSVersion.Platform <> PlatformID.Win32NT then Assert.Ignore("This test can be only run on Windows")
+
   module ExecTests =
       [<Test>]
       let ``Can exec .cmd file on Windows`` () =
-          if Environment.OSVersion.Platform <> PlatformID.Win32NT then Assert.Ignore("This test can be only run on Windows")
+          ignoreOnNonWindows()
           use cmdFile = new DisposableFile(extension="cmd", content="@echo off\r\necho hello world")
           execWithOutput cmdFile.FullPath ""
           |> should equal "hello world"
+
+      [<Test>]
+      let ``When program retuns non-zero exit code, an exception is thrown by default`` () =
+        ignoreOnNonWindows()
+        let cmdPath = where "cmd"
+        let expectEx (f: unit -> _) = Assert.Throws<Exception>(fun () -> f() |> ignore) |> ignore
+
+        expectEx (fun () -> exec cmdPath "/c exit 1")
+        expectEx (fun () -> execWithOutput cmdPath "/c exit 1")
+
 
   module WhereTests =
       [<Test>]
