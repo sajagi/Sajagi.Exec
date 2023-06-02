@@ -228,11 +228,11 @@ let run exe args =
 let runArgs exe args =
     runArgsAsync exe args |> Async.RunSynchronously
 
-let private execAsyncWithOutput_ exe (args: ExecRaw.ExeArgs) =
+let private execAsyncWithOutput_ exe (args: ExecRaw.ExeArgs) (flags: StartOptionFlags) =
     let exe = Executable(exe)
 
     async {
-        let startOpts = { defaultStartOpts with Output = Capture }
+        let startOpts = { defaultStartOpts with Output = Capture; Flags = flags }
         let! res = exe.runAsync (args, startOpts = startOpts)
 
         return res.Output.StringOutput
@@ -240,19 +240,35 @@ let private execAsyncWithOutput_ exe (args: ExecRaw.ExeArgs) =
 
 /// Runs an executable and returns the output. Checks the exit code.
 let execAsyncWithOutput exe args =
-    execAsyncWithOutput_ exe (ExecRaw.Raw args)
+    execAsyncWithOutput_ exe (ExecRaw.Raw args) StartOptionFlags.None
+
+/// Runs an executable and returns the output. Does not print executable path and arguments. Checks the exit code.
+let execAsyncWithOutputSilent exe args =
+    execAsyncWithOutput_ exe (ExecRaw.Raw args) StartOptionFlags.NoPrint
 
 /// Runs an executable and returns the output. Checks the exit code.
 let execArgsAsyncWithOutput exe args =
-    execAsyncWithOutput_ exe (ExecRaw.Args args)
+    execAsyncWithOutput_ exe (ExecRaw.Args args) StartOptionFlags.None
+
+/// Runs an executable and returns the output. Does not print executable path and arguments. Checks the exit code.
+let execArgsAsyncWithOutputSilent exe args =
+    execAsyncWithOutput_ exe (ExecRaw.Args args) StartOptionFlags.NoPrint
 
 /// Runs an executable and returns the output. Checks the exit code.
 let execWithOutput exe args =
     execAsyncWithOutput exe args |> Async.RunSynchronously
 
+/// Runs an executable and returns the output. Does not print executable path and arguments. Checks the exit code.
+let execWithOutputSilent exe args =
+    execAsyncWithOutputSilent exe args |> Async.RunSynchronously
+
 /// Runs an executable and returns the output. Checks the exit code.
 let execArgsWithOutput exe args =
     execArgsAsyncWithOutput exe args |> Async.RunSynchronously
+
+/// Runs an executable and returns the output. Does not print executable path and arguments. Checks the exit code.
+let execArgsWithOutputSilent exe args =
+    execArgsAsyncWithOutputSilent exe args |> Async.RunSynchronously
 
 let private isExecutableApplicableForPlatform (platform:PlatformID) (path: string) =
     match platform with
