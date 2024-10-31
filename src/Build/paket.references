@@ -1,2 +1,3 @@
-FSharp.Core
-Sajagi.Exec
+group build
+    FSharp.Core
+    Sajagi.Exec
