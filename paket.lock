@@ -3,11 +3,5 @@ RESTRICTION: == net6.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
     FSharp.Core (6.0.7)
-
-GROUP build
-STORAGE: NONE
-RESTRICTION: == net6.0
-NUGET
-  remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (7.0.403)
-    Sajagi.Exec (0.0.1-alpha004)
+    Sajagi.Exec (0.0.1-alpha005)
+      FSharp.Core (>= 6.0)
